@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Victoria Ren</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Cleaner, more modern neutrals + subtle accent */
+      --bg: #faf8f5;
+      --ink: #141210;
+      --muted: #6f6a63;
+      --accent: #2f6fed;   /* change this anytime */
+      --line: rgba(20,18,16,0.12);
+      --card: rgba(20,18,16,0.04);
+      --card2: rgba(20,18,16,0.06);
+      --shadow: 0 20px 55px rgba(0,0,0,0.10);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: radial-gradient(900px 600px at 15% 10%, rgba(47,111,237,.10), transparent 60%),
+                  radial-gradient(900px 600px at 85% 0%, rgba(47,111,237,.06), transparent 65%),
+                  var(--bg);
+      color: var(--ink);
+      font-family: 'DM Mono', monospace;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* Respect reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { animation: none !important; transition: none !important; }
+    }
+
+    /* Layout */
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 28px; }
+    section { padding: 96px 0; }
+    .hairline { height: 1px; background: var(--line); width: 100%; }
+
+    /* Nav */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      background: rgba(250,248,245,0.82);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .nav-inner {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 18px 0;
+    }
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      font-weight: 300;
+      letter-spacing: 0.02em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 26px; align-items: center; }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+      padding: 10px 0;
+    }
+    .nav-links a::after{
+      content:"";
+      position:absolute;
+      left:0; bottom:6px;
+      width:0%;
+      height:1px;
+      background: var(--accent);
+      transition: width .22s ease;
+      opacity: .9;
+    }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Hero */
+    .hero {
+      padding-top: 94px; /* space for fixed nav */
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 56px;
+      align-items: center;
+    }
+
+    .hero-tag {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.15s forwards;
+    }
+
+    .hero-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 92px);
+      font-weight: 300;
+      line-height: 1.02;
+      letter-spacing: -0.02em;
+      margin-bottom: 22px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.3s forwards;
+    }
+    .hero-name em { font-style: italic; color: var(--accent); }
+
+    .hero-desc {
+      font-size: 13px;
+      color: var(--muted);
+      max-width: 520px;
+      line-height: 1.85;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.45s forwards;
+      margin-bottom: 30px;
+    }
+
+    .hero-ctas {
+      display: flex; gap: 14px; flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.6s forwards;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 18px;
+      font-family: 'DM Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 14px;
+      transition: transform 0.2s ease, background 0.2s ease, border-color .2s ease, color .2s ease;
+      border: 1px solid var(--line);
+      color: var(--ink);
+      background: rgba(255,255,255,0.35);
+    }
+    .btn:hover { transform: translateY(-1px); border-color: rgba(47,111,237,.45); }
+    .btn-primary {
+      background: var(--ink);
+      color: var(--bg);
+      border-color: rgba(20,18,16,0.6);
+      box-shadow: var(--shadow);
+    }
+    .btn-primary:hover { background: var(--accent); border-color: rgba(47,111,237,.6); }
+    .btn-outline:hover { color: var(--accent); }
+
+    /* Right column: cleaner "Currently" + highlights (no 2028/780%) */
+    .hero-panel {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.35);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.06);
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.8s ease 0.7s forwards;
+    }
+    .panel-top {
+      padding: 22px 22px 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(20,18,16,0.02);
+    }
+    .panel-kicker {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .panel-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 300;
+      line-height: 1.2;
+    }
+    .panel-body { padding: 16px 22px 22px; }
+
+    .currently-item {
+      display: flex; gap: 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+    .currently-item:first-child { border-top: none; padding-top: 4px; }
+    .dot {
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      margin-top: 7px;
+      flex-shrink: 0;
+    }
+
+    .highlights {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.35);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .chip strong { color: var(--ink); font-weight: 400; }
+
+    /* Section headers */
+    .section-header {
+      display: flex; align-items: center; gap: 18px;
+      margin-bottom: 44px;
+    }
+    .section-num {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      color: var(--accent);
+    }
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+    }
+    .section-line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    /* Projects */
+    #projects { border-top: 1px solid var(--line); }
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .project-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255,255,255,0.35);
+      padding: 26px 24px;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .22s ease, background .22s ease, border-color .22s ease;
+      box-shadow: 0 14px 35px rgba(0,0,0,0.05);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      min-height: 230px;
+    }
+    .project-card:hover {
+      transform: translateY(-3px);
+      background: rgba(20,18,16,0.03);
+      border-color: rgba(47,111,237,.40);
+    }
+
+    .project-top {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+    }
+    .project-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.15;
+    }
+    .project-arrow {
+      font-size: 18px;
+      color: var(--accent);
+      transition: transform .2s ease;
+    }
+    .project-card:hover .project-arrow { transform: translate(4px, -4px); }
+    .project-desc { font-size: 12px; color: var(--muted); line-height: 1.8; flex: 1; }
+
+    .project-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+    .tag {
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,0.22);
+    }
+    .project-card:hover .tag { border-color: rgba(47,111,237,.45); color: var(--ink); }
+
+    /* About */
+    #about {
+      border-top: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 70px;
+    }
+    .about-text {
+      font-size: 14px;
+      line-height: 1.95;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+    .about-text strong { color: var(--ink); font-weight: 400; }
+
+    .skills-block { margin-bottom: 26px; }
+    .skills-category {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-pill {
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      color: var(--ink);
+    }
+
+    /* Contact */
+    #contact {
+      border-top: 1px solid var(--line);
+      text-align: center;
+      padding: 110px 0;
+    }
+    .contact-pre {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 18px;
+    }
+    .contact-heading {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(40px, 5vw, 72px);
+      font-weight: 300;
+      margin-bottom: 34px;
+      line-height: 1.08;
+    }
+    .contact-heading em { font-style: italic; color: var(--accent); }
+
+    .contact-links { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+    .contact-link {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 4px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    .contact-link:hover { color: var(--ink); border-color: rgba(47,111,237,.55); }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 22px 0;
+      color: var(--muted);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+    }
+    .footer-inner { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+    /* Reveal animation */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* Custom cursor (desktop only) */
+    .cursor, .cursor-ring { display: none; }
+    @media (hover: hover) and (pointer: fine) {
+      body { cursor: none; }
+      .cursor {
+        display: block;
+        width: 8px; height: 8px;
+        background: var(--accent);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s ease, height 0.2s ease;
+      }
+      .cursor-ring {
+        display: block;
+        width: 30px; height: 30px;
+        border: 1px solid var(--accent);
+        border-radius: 50%;
+        position: fixed;
+        pointer-events: none;
+        z-index: 9998;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s ease, height 0.2s ease, opacity 0.2s;
+        opacity: 0.4;
+      }
+      a, button { cursor: none; }
+    }
+
+    /* Mobile */
+    @media (max-width: 860px) {
+      .hero { grid-template-columns: 1fr; gap: 22px; padding-top: 86px; }
+      .projects-grid { grid-template-columns: 1fr; }
+      #about { grid-template-columns: 1fr; gap: 36px; }
+      section { padding: 72px 0; }
+      .container { padding: 0 20px; }
+      .nav-links { gap: 16px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <nav>
+    <div class="container nav-inner">
+      <a href="#home" class="nav-logo">Victoria Ren</a>
+      <div class="nav-links">
+        <a href="#projects">Work</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+        <a href="Victoria_Ren_Resume_UCPath.pdf" target="_blank" rel="noopener">Résumé ↗</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero container" id="home">
+    <div>
+      <p class="hero-tag">Applied Math & Economics — UC Santa Cruz</p>
+      <h1 class="hero-name">Victoria<br><em>Ren</em></h1>
+      <p class="hero-desc">
+        I find patterns in messy data and translate them into decisions that matter.
+        Interested in strategy, analytics, and the intersection of rigorous thinking with creative industries.
+      </p>
+      <div class="hero-ctas">
+        <a href="#projects" class="btn btn-primary">View My Work</a>
+        <a href="#contact" class="btn btn-outline">Get In Touch</a>
+      </div>
+    </div>
+
+    <aside class="hero-panel">
+      <div class="panel-top">
+        <div class="panel-kicker">Currently</div>
+        <div class="panel-title">Building, analyzing, and shipping projects.</div>
+      </div>
+
+      <div class="panel-body">
+        <div class="currently-item">
+          <div class="dot"></div>
+          <span>Research Assistant — UCSC SLOTHLab, studying LLM bias across demographics</span>
+        </div>
+        <div class="currently-item">
+          <div class="dot"></div>
+          <span>Director of Marketing — Business Economics Academia</span>
+        </div>
+        <div class="currently-item">
+          <div class="dot"></div>
+          <span>Treasurer — Association for Women in Mathematics</span>
+        </div>
+
+        <!-- Quick highlights without the 2028/780% stats -->
+        <div class="highlights">
+          <div class="chip"><strong>3.83</strong> GPA</div>
+          <div class="chip"><strong>170+</strong> entries analyzed</div>
+          <div class="chip"><strong>Python</strong> + stats pipelines</div>
+          <div class="chip"><strong>ML</strong> + analytics projects</div>
+        </div>
+      </div>
+    </aside>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="section-num">01</span>
+        <h2 class="section-title">Selected Work</h2>
+        <div class="section-line"></div>
+      </div>
+
+      <div class="projects-grid">
+        <a href="projects/llm-bias.html" class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-title">LLM Bias in Medical Contexts</h3>
+            <span class="project-arrow">↗</span>
+          </div>
+          <p class="project-desc">
+            Analyzed 170+ prompt-response pairs to test for statistically significant variation across demographic conditions.
+            Built a clean Python pipeline and summarized findings for non-technical stakeholders.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">ANOVA</span>
+            <span class="tag">VADER</span>
+            <span class="tag">Research</span>
+          </div>
+        </a>
+
+        <a href="projects/housing.html" class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-title">Housing Price Prediction</h3>
+            <span class="project-arrow">↗</span>
+          </div>
+          <p class="project-desc">
+            Compared models to predict housing prices with an emphasis on interpretability, feature reasoning,
+            and communicating results clearly (not just optimizing metrics).
+          </p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">pandas</span>
+            <span class="tag">ML</span>
+            <span class="tag">Modeling</span>
+          </div>
+        </a>
+
+        <a href="projects/parking.html" class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-title">Parking Lot Occupancy Detection</h3>
+            <span class="project-arrow">↗</span>
+          </div>
+          <p class="project-desc">
+            Built a computer vision workflow to estimate parking occupancy from images—covering preprocessing,
+            augmentation, and a CNN model in PyTorch.
+          </p>
+          <div class="project-tags">
+            <span class="tag">PyTorch</span>
+            <span class="tag">Computer Vision</span>
+            <span class="tag">CNN</span>
+            <span class="tag">Data</span>
+          </div>
+        </a>
+
+        <!-- Optional: add a 4th card later for Metrolink / strategy -->
+        <!--
+        <a href="projects/metrolink.html" class="project-card reveal">
+          <div class="project-top">
+            <h3 class="project-title">Metrolink TCAP — Ops & Equity Analysis</h3>
+            <span class="project-arrow">↗</span>
+          </div>
+          <p class="project-desc">
+            Built an equity-focused transportation concept using ridership/capacity analysis and a systems approach.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Strategy</span>
+            <span class="tag">Ops</span>
+            <span class="tag">Data</span>
+          </div>
+        </a>
+        -->
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about">
+    <div class="container" style="display:grid; grid-template-columns: 1fr 1fr; gap:70px;">
+      <div>
+        <div class="section-header reveal" style="margin-bottom: 28px;">
+          <span class="section-num">02</span>
+          <h2 class="section-title">About</h2>
+          <div class="section-line"></div>
+        </div>
+
+        <p class="about-text reveal">
+          I'm a sophomore at UC Santa Cruz double majoring in <strong>Applied Mathematics</strong> and <strong>Economics</strong>.
+          I'm drawn to problems where the data is messy, the stakes are real, and the answer isn't obvious.
+        </p>
+        <p class="about-text reveal">
+          My background spans academic research, operations analysis, and marketing strategy — so I'm comfortable moving between
+          a spreadsheet, a Python pipeline, and a stakeholder summary.
+        </p>
+        <p class="about-text reveal">
+          I'm especially interested in <strong>strategy & analytics roles</strong> where rigorous thinking meets product intuition.
+        </p>
+      </div>
+
+      <div class="reveal">
+        <div class="skills-block">
+          <p class="skills-category">Languages & Tools</p>
+          <div class="skills-list">
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">pandas</span>
+            <span class="skill-pill">PyTorch</span>
+            <span class="skill-pill">matplotlib</span>
+            <span class="skill-pill">STATA</span>
+            <span class="skill-pill">Excel</span>
+            <span class="skill-pill">LaTeX</span>
+          </div>
+        </div>
+
+        <div class="skills-block">
+          <p class="skills-category">Methods</p>
+          <div class="skills-list">
+            <span class="skill-pill">Statistical Analysis</span>
+            <span class="skill-pill">ANOVA</span>
+            <span class="skill-pill">Sentiment Analysis</span>
+            <span class="skill-pill">ML Modeling</span>
+            <span class="skill-pill">Data Cleaning</span>
+            <span class="skill-pill">Process Documentation</span>
+          </div>
+        </div>
+
+        <div class="skills-block">
+          <p class="skills-category">Currently Learning</p>
+          <div class="skills-list">
+            <span class="skill-pill">SQL</span>
+            <span class="skill-pill">Tableau</span>
+            <span class="skill-pill">Business Strategy</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact">
+    <div class="container">
+      <p class="contact-pre reveal">Let's connect</p>
+      <h2 class="contact-heading reveal">Open to <em>opportunities</em><br>and conversations.</h2>
+      <div class="contact-links reveal">
+        <a href="mailto:victoriaren2024@gmail.com" class="contact-link">Email</a>
+        <a href="https://github.com/victoriaren2024" target="_blank" rel="noopener" class="contact-link">GitHub ↗</a>
+        <a href="https://linkedin.com/" target="_blank" rel="noopener" class="contact-link">LinkedIn ↗</a>
+        <a href="Victoria_Ren_Resume_UCPath.pdf" target="_blank" rel="noopener" class="contact-link">Résumé ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container footer-inner">
+      <span>Victoria Ren © 2026</span>
+      <span>Diamond Bar, CA · UC Santa Cruz</span>
+    </div>
+  </footer>
+
+  <script>
+    // Cursor (desktop only)
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (finePointer && !reducedMotion) {
+      let mx = 0, my = 0, rx = 0, ry = 0;
+      document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+
+      function animateCursor() {
+        cursor.style.left = mx + 'px';
+        cursor.style.top = my + 'px';
+
+        rx += (mx - rx) * 0.14;
+        ry += (my - ry) * 0.14;
+        ring.style.left = rx + 'px';
+        ring.style.top = ry + 'px';
+        requestAnimationFrame(animateCursor);
+      }
+      animateCursor();
+
+      document.querySelectorAll('a, button').forEach(el => {
+        el.addEventListener('mouseenter', () => {
+          cursor.style.width = '14px'; cursor.style.height = '14px';
+          ring.style.width = '46px'; ring.style.height = '46px'; ring.style.opacity = '0.75';
+        });
+        el.addEventListener('mouseleave', () => {
+          cursor.style.width = '8px'; cursor.style.height = '8px';
+          ring.style.width = '30px'; ring.style.height = '30px'; ring.style.opacity = '0.4';
+        });
+      });
+    }
+
+    // Scroll reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 70);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
