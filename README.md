@@ -1,6 +1,6 @@
 # VictoriaRenPortfolio
 
-Welcome to my portfolio! I’m an Applied Mathematics and Economics student at UC Santa Cruz with a focus on data analytics and data-driven strategy.
+Welcome to my portfolio! I’m an Applied Mathematics student at UC Santa Cruz with a focus on data analytics and data-driven strategy.
 
 ## About Me
 I enjoy working at the intersection of quantitative analysis and real world decision making. My experience includes research, ml projects, and marketing/design analytics.
